@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.List;
@@ -8,6 +9,11 @@ public class Grid {
     private int gridSize;
     private char[][] content;
     private List<Coordinate> coordinates = new ArrayList<>();
+    private enum Direction{
+        VERTICAL,
+        HORIZONTAL,
+        DIAGONAL
+    }
     private class Coordinate {
         int x;
         int y;
@@ -49,14 +55,39 @@ public class Grid {
             System.out.println("");
         }
     }
-    private boolean doesFit(String word, Coordinate coordinate){
-        if (coordinate.y + word.length() < gridSize){
-            for(int i = 0 ; i < word.length(); i++){
-                if(content[coordinate.x][coordinate.y+i] != '_') return  false;
+    private Direction doesFit(String word, Coordinate coordinate){
+        List<Direction> directions = Arrays.asList(Direction.values());
+        Collections.shuffle(directions);
+        for(Direction direction:directions){
+            if(doesFit(word,coordinate,direction)){
+                return direction;
             }
-            return true;
         }
-        return false;
+        return null;
+    }
+    private boolean doesFit(String word, Coordinate coordinate, Direction direction){
+        int wordLength = word.length();
+        switch (direction){
+            case DIAGONAL -> {
+                if (coordinate.y+wordLength>gridSize || coordinate.x+word.length()>gridSize)return false;
+                for(int i = 0 ; i < wordLength; i++){
+                    if(content[coordinate.x+i][coordinate.y+i] != '_') return  false;
+                }
+            }
+            case VERTICAL ->{
+                if (coordinate.x+wordLength>gridSize)return false;
+                for(int i = 0 ; i < wordLength; i++){
+                    if(content[coordinate.x+i][coordinate.y] != '_') return  false;
+                }
+            }
+            case HORIZONTAL ->{
+                if (coordinate.y+wordLength>gridSize)return false;
+                for(int i = 0 ; i < wordLength; i++){
+                    if(content[coordinate.x][coordinate.y+i] != '_') return  false;
+                }
+            }
+        }
+        return true;
     }
 
 }
