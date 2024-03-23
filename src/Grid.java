@@ -11,7 +11,10 @@ public class Grid {
     private enum Direction{
         VERTICAL,
         HORIZONTAL,
-        DIAGONAL
+        DIAGONAL,
+        VERTICAL_INVERSE,
+        HORIZONTAL_INVERSE,
+        DIAGONAL_INVERSE
     }
     private class Coordinate {
         int x;
@@ -53,6 +56,21 @@ public class Grid {
                         case HORIZONTAL ->{
                             for(char c : word.toCharArray()){
                                 content[x][y++] = c;
+                            }
+                        }
+                        case DIAGONAL_INVERSE -> {
+                            for(char c : word.toCharArray()){
+                                content[x--][y--] = c;
+                            }
+                        }
+                        case VERTICAL_INVERSE ->{
+                            for(char c : word.toCharArray()){
+                                content[x--][y] = c;
+                            }
+                        }
+                        case HORIZONTAL_INVERSE ->{
+                            for(char c : word.toCharArray()){
+                                content[x][y--] = c;
                             }
                         }
                     }
@@ -98,6 +116,24 @@ public class Grid {
                 if (coordinate.y+wordLength>gridSize)return false;
                 for(int i = 0 ; i < wordLength; i++){
                     if(content[coordinate.x][coordinate.y+i] != '_') return  false;
+                }
+            }
+            case DIAGONAL_INVERSE -> {
+                if (coordinate.y < wordLength || coordinate.x < word.length())return false;
+                for(int i = 0 ; i < wordLength; i++){
+                    if(content[coordinate.x-i][coordinate.y-i] != '_') return  false;
+                }
+            }
+            case VERTICAL_INVERSE ->{
+                if (coordinate.x < wordLength)return false;
+                for(int i = 0 ; i < wordLength; i++){
+                    if(content[coordinate.x-i][coordinate.y] != '_') return  false;
+                }
+            }
+            case HORIZONTAL_INVERSE ->{
+                if (coordinate.y < wordLength)return false;
+                for(int i = 0 ; i < wordLength; i++){
+                    if(content[coordinate.x][coordinate.y-i] != '_') return  false;
                 }
             }
         }
