@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.List;
 
 
@@ -33,14 +32,29 @@ public class Grid {
         }
     }
     public void fillGrid(List<String> words){
+        Collections.shuffle(coordinates);
         for(String word : words) {
-            Collections.shuffle(coordinates);
             for(Coordinate coordinate:coordinates){
                 int x = coordinate.x;
                 int y = coordinate.y;
-                if(doesFit(word,coordinate)) {
-                    for(char c : word.toCharArray()){
-                        content[x][y++] = c;
+                Direction selectedDirection = getDirectionforFit(word,coordinate);
+                if(selectedDirection != null) {
+                    switch (selectedDirection){
+                        case DIAGONAL -> {
+                            for(char c : word.toCharArray()){
+                                content[x++][y++] = c;
+                            }
+                        }
+                        case VERTICAL ->{
+                            for(char c : word.toCharArray()){
+                                content[x++][y] = c;
+                            }
+                        }
+                        case HORIZONTAL ->{
+                            for(char c : word.toCharArray()){
+                                content[x][y++] = c;
+                            }
+                        }
                     }
                     break;
                 }
@@ -55,7 +69,7 @@ public class Grid {
             System.out.println("");
         }
     }
-    private Direction doesFit(String word, Coordinate coordinate){
+    private Direction getDirectionforFit(String word, Coordinate coordinate){
         List<Direction> directions = Arrays.asList(Direction.values());
         Collections.shuffle(directions);
         for(Direction direction:directions){
