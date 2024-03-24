@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class Grid {
@@ -78,6 +79,7 @@ public class Grid {
                 }
             }
         }
+        randomFillGrid();
     }
     public void displayGrid(){
         for(int i=0 ; i<gridSize ; i++){
@@ -85,6 +87,18 @@ public class Grid {
                 System.out.print(content[i][j] + " ");
             }
             System.out.println("");
+        }
+
+    }
+    private void randomFillGrid(){
+        String allCapLetter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        for(int i=0 ; i<gridSize ; i++){
+            for(int j=0 ; j<gridSize ; j++){
+                if(content[i][j]=='_'){
+                    int randomIndex = ThreadLocalRandom.current().nextInt(0,allCapLetter.length());
+                    content[i][j]=allCapLetter.charAt(randomIndex);
+                }
+            }
         }
     }
     private Direction getDirectionforFit(String word, Coordinate coordinate){
@@ -139,5 +153,6 @@ public class Grid {
         }
         return true;
     }
+
 
 }
